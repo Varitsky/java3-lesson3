@@ -17,9 +17,9 @@ public class Main {
             deleteFileNamed("output.txt"); // Задание номер 2.
             merge();                       // Задание номер 2.
 
-//            calculateCharsInFile("output.txt"); //подсчет количества символов нашего 10мб файла для подсчета количества страниц
+            calculateCharsInFile("output.txt"); //подсчет количества символов нашего 10мб файла для подсчета количества страниц
 
-            readPage(23);                    // Задание номер 3.
+            readPage(272);                    // Задание номер 3. У нас 272 страницы
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -122,16 +122,30 @@ public class Main {
      * не должна загружаться дольше 10 секунд, а чтение – занимать свыше 5 секунд.*/
 
     public static void readPage(int pageNumber) throws IOException {
-        int charNumberFromPageNumber = pageNumber*1800;
+        int charNumberFromPageNumber = pageNumber * 1800;
         long t = System.currentTimeMillis();
-        try (RandomAccessFile raf = new RandomAccessFile("1234/10mb.txt", "r")) {
-            for (int i = charNumberFromPageNumber; i < charNumberFromPageNumber+1800; i++) {
-                raf.seek(i);
-                System.out.print((char) raf.read());
+        if (pageNumber >= 0 && pageNumber < 272) {
+            try (RandomAccessFile raf = new RandomAccessFile("1234/10mb.txt", "r")) {
+                for (int i = charNumberFromPageNumber; i < charNumberFromPageNumber + 1800; i++) {
+                    raf.seek(i);
+                    System.out.print((char) raf.read());
+                }
             }
+            System.out.println("\n" + "Время печати страницы: " + (System.currentTimeMillis() - t) + "мс");
+        } else if (pageNumber == 272) {
+            try (RandomAccessFile raf = new RandomAccessFile("1234/10mb.txt", "r")) {
+                for (int i = 272*1800; i < 491086; i++) {
+                    raf.seek(i);
+                    System.out.print((char) raf.read());
+                }
+            }
+            int lastPage = 491086-272*1800;
+            System.out.println("Последняя страница, распечатано символов - " + lastPage);
+        } else {
+            System.out.println("Нет такой страницы");
         }
-        System.out.println("\n" + "Время печати страницы: " + (System.currentTimeMillis() - t) + "мс");
     }
+
 
 
 
@@ -166,6 +180,8 @@ public class Main {
         System.out.println();
         System.out.println("\n"+"Количество символов: " + count);
         System.out.println((count/1800) + " страницы, последняя покороче, видимо с ней будут проблемы");
+        System.out.println("Искуственно ограничиваем количество страниц.");
+        System.out.println();
     }
 }
 
